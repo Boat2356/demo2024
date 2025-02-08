@@ -30,14 +30,17 @@ class ScopuscallController extends Controller
         //$data = User::role('teacher')->get();
         //return $data;
         //foreach ($data as $name) {
-
+        
         $fname = substr($data['fname_en'], 0, 1);
         $lname = $data['lname_en'];
         $id    = $data['id'];
-
+        $apiKey = env('SCOPUS_API_KEY'); // ดึง API Key จาก .env
+        if ($apiKey == null) {
+            return response()->json(['error' => 'API Key not found'], 404);
+        }
         $url = Http::get('https://api.elsevier.com/content/search/scopus?', [
             'query' => "AUTHOR-NAME(" . "$lname" . "," . "$fname" . ")",
-            'apikey' => '6ab3c2a01c29f0e36b00c8fa1d013f83',
+            'apikey' => $apiKey,
         ])->json();
 
 
